@@ -5,8 +5,8 @@
  */
 
 
-import parse from './parse'
-
-const res = parse('<template><div class="abc"></div></template>')
-
-console.log(res)
+// import parse from './parse'
+//
+// const res = parse('<template><div class="abc"></div></template>')
+//
+// console.log(res)
