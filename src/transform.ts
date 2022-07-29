@@ -18,10 +18,12 @@ export function transformChildren(children: Ast[]) {
       selectorNames: [],
       children: []
     }
-    childSelectorTree[i].selectorNames.push(...transformClass(child.class))
-    childSelectorTree[i].selectorNames.push(...transformId(child.id))
-    childSelectorTree[i].selectorNames.push(...transformClass(child.bindClass))
-    childSelectorTree[i].selectorNames.push(...transformId(child.bindId))
+    childSelectorTree[i].selectorNames.concat(
+      transformClass(child.class),
+      transformClass(child.bindClass),
+      transformId(child.id),
+      transformId(child.bindId)
+    )
     if(child.children.length) {
       childSelectorTree[i].children = transformChildren(child.children)
     }
