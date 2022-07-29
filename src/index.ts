@@ -1,3 +1,6 @@
+import { transform } from './transform'
+import { parse } from './parse'
+
 /**
  * 1. 通过读取.vue的文件中的template 生成ast树
  * 2. 获取ast中class 三步走 1) 获取直接的class 2) 获取数组的 3) 获取对象的
@@ -10,3 +13,5 @@
 // const res = parse('<template><div class="abc"></div></template>')
 //
 // console.log(res)
+const template = '<template><div>123</div></template>'
+const selectorTree = transform(parse(template))

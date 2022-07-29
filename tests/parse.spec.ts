@@ -5,11 +5,19 @@ describe('parse', () => {
     const res = parse('<div class="foo"></div>')
     expect(res).toEqual( {
       type: 'root',
+      tag: 'root',
+      isVoidElement: false,
+      class: '',
+      bindClass: '',
+      id:'',
+      bindId:'',
       children: [{
         type: 'tag',
         tag: 'div',
-        class: '"foo"',
+        class: 'foo',
         bindClass: '',
+        id:'',
+        bindId:'',
         isVoidElement: false,
         children: []
       }]
@@ -19,19 +27,29 @@ describe('parse', () => {
     const res = parse('<div class="foo"><p class="bar"></p></div>')
     expect(res).toEqual({
       type: 'root',
+      tag: 'root',
+      isVoidElement: false,
+      class: '',
+      bindClass: '',
+      id:'',
+      bindId:'',
       children: [
         {
           type: 'tag',
           tag: 'div',
-          class: '"foo"',
+          class: 'foo',
           bindClass: '',
+          id:'',
+          bindId:'',
           isVoidElement: false,
           children: [
             {
               type: 'tag',
               tag: 'p',
-              class: '"bar"',
+              class: 'bar',
               bindClass: '',
+              id:'',
+              bindId:'',
               isVoidElement: false,
               children: []
             }
