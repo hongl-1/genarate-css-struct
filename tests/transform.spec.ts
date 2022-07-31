@@ -9,10 +9,10 @@ describe('transform', () => {
       selectorNames: [],
       children: [
         {
-          selectorNames: ['foo'],
+          selectorNames: ['.foo'],
           children: [
             {
-              selectorNames: ['bar'],
+              selectorNames: ['.bar'],
               children: []
             }
           ]

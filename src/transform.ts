@@ -18,7 +18,7 @@ export function transformChildren(children: Ast[]) {
       selectorNames: [],
       children: []
     }
-    childSelectorTree[i].selectorNames.concat(
+    childSelectorTree[i].selectorNames = ([] as string[]).concat(
       transformClass(child.class),
       transformClass(child.bindClass),
       transformId(child.id),
