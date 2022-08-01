@@ -89,43 +89,82 @@ function createParserContext(source: string): ParserContext {
 }
 
 
-function resetScss(selectorTree: SelectorTree): ScssAst[] {
-  // if(!selectorTree) return [oldScssAst]
-  const newScssAstArr: ScssAst[] = []
-  for(let i = 0; i < selectorTree.selectorNames.length; i++) {
-    const selector = selectorTree.selectorNames[i]
-    newScssAstArr.push({
-      children: [],
-      rule: '',
-      rnInfo: {},
-      selectorName: selector
+function resetScss(selectorTree: SelectorTree, scssAst: ScssAst, childIndex = 0) {
+  if(!selectorTree) return
+  const selectorNames = selectorTree.selectorNames
+  for (let i = 0; i < selectorNames.length; i++) {
+    const selector = selectorNames[i]
+    // 查找当前scssAst中是否已经有模板中的选择器
+    const matchIndex = scssAst.children.findIndex((scssAstItem) => {
+      return !scssAstItem.hasMatch && (selector === scssAstItem.selectorName || (scssAstItem.selectorName.startsWith('&') && selector === completeSelectorName(scssAst)))
     })
-    if(i === 0) {
-      newScssAstArr[0].children = selectorTree.children[0] && resetScss(selectorTree.children[0])
+    // 没有的话则代表是新增的选择器去遍历所有的子集
+    if(matchIndex === -1) {
+      scssAst.children = [
+        // 将当前数组按照子集的开始index拆分开, 将新的节点信息插入
+        ...scssAst.children.slice(0, childIndex + i),
+        {
+          rule: '',
+          // 当前为1时, 遍历他的所有子集
+          children: i === 0 ? trackChildren(selectorTree) : [],
+          rnInfo: {},
+          selectorName: selector,
+          isNew: true
+        } as ScssAst,
+        ...scssAst.children.slice(childIndex + i)
+      ]
+    } else {
+      if(i === 0) {
+        scssAst.children[matchIndex].hasMatch = true
+        selectorTree.children.forEach((selectorTreeChild, index) => {
+          const scssAstChild = scssAst.children[matchIndex]
+          if(!scssAstChild.isKeyRule) {
+            resetScss(selectorTreeChild, scssAstChild, getPrevSelectorsCount(selectorTree, index))
+          }
+        })
+      }
     }
   }
-  return newScssAstArr
-  // selectorTree.selectorNames.forEach(name => {
-  //   newScssAst.children.push({
-  //     children: [],
-  //     rnInfo: {},
-  //     rule: '',
-  //     selectorName: name
-  //   })
-  // })
-  // const selectorChildren = selectorTree.children
-  // for (let i = 0; i < selectorChildren.length; i++) {
-  //   const selectorChild = selectorChildren[i]
-  //
-  //   selectorChild.children.forEach(child => {
-  //     newScssAst.children[0].children.push(resetScss(child, oldScssAst))
-  //   })
-  //   // newScssAst.children[0]=
-  // }
-  // return newScssAst
+}
+// 获取当前选择器列表前面所有同级的列表中的selector的数量
+function getPrevSelectorsCount(selectorTree: SelectorTree, index: number) {
+  // 获取所有之前的列表
+  const prevSelectorTreeChildren = selectorTree.children.slice(0, index)
+  return prevSelectorTreeChildren.reduce((prev, currentChild) => {
+    return prev + currentChild.selectorNames.length
+  }, 0)
 }
 
-const a = resetScss({
+function trackChildren(selectorTree: SelectorTree): ScssAst[] {
+  const scssAstArr: ScssAst[] = []
+  for(let i = 0; i < selectorTree.children.length; i++) {
+    selectorTree.children[i].selectorNames.forEach((selector, index) => {
+      scssAstArr.push({
+        rule: '',
+        rnInfo: {},
+        selectorName: selector,
+        children: index === 0 ? trackChildren(selectorTree.children[i]) : [],
+        isNew: true
+      })
+    })
+  }
+  return scssAstArr
+}
+
+function completeSelectorName (scssAst: ScssAst, name: string = ''): string {
+  if(scssAst.selectorName.startsWith('&')) {
+    const selectorName = scssAst.selectorName
+    return scssAst.parent ?
+      completeSelectorName(scssAst.parent, selectorName + name.replace('&', '')) : (selectorName + name)
+  }
+  return scssAst.selectorName + name.replace('&', '')
+}
+
+const a: ScssAst = {
+  children: [], rnInfo: {}, rule: '', selectorName: ''
+
+}
+resetScss({
   selectorNames: ['.baz', '.baz2', '.baz3'],
   children: [
     {
@@ -138,7 +177,7 @@ const a = resetScss({
       ]
     },
     {
-      selectorNames: ['.foo2'],
+      selectorNames: ['.foo2', '.baz2'],
       children: [
         {
           selectorNames: ['bar2'],
@@ -147,7 +186,7 @@ const a = resetScss({
       ]
     }
   ]
-})
+}, a)
 
 const b =a
 console.log(a)
