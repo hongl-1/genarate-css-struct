@@ -88,7 +88,6 @@ function createParserContext(source: string): ParserContext {
   }
 }
 
-
 function resetScss(selectorTree: SelectorTree, scssAst: ScssAst, childIndex = 0) {
   if(!selectorTree) return
   const selectorNames = selectorTree.selectorNames
@@ -162,31 +161,4 @@ function completeSelectorName (scssAst: ScssAst, name: string = ''): string {
 
 const a: ScssAst = {
   children: [], rnInfo: {}, rule: '', selectorName: ''
-
 }
-resetScss({
-  selectorNames: ['.baz', '.baz2', '.baz3'],
-  children: [
-    {
-      selectorNames: ['.foo'],
-      children: [
-        {
-          selectorNames: ['bar'],
-          children: []
-        }
-      ]
-    },
-    {
-      selectorNames: ['.foo2', '.baz2'],
-      children: [
-        {
-          selectorNames: ['bar2'],
-          children: []
-        }
-      ]
-    }
-  ]
-}, a)
-
-const b =a
-console.log(a)
