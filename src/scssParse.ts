@@ -88,7 +88,7 @@ function createParserContext(source: string): ParserContext {
   }
 }
 
-function resetScss(selectorTree: SelectorTree, scssAst: ScssAst, childIndex = 0) {
+export function resetScss(selectorTree: SelectorTree, scssAst: ScssAst, childIndex = 0) {
   if(!selectorTree) return
   const selectorNames = selectorTree.selectorNames
   for (let i = 0; i < selectorNames.length; i++) {
@@ -159,6 +159,53 @@ function completeSelectorName (scssAst: ScssAst, name: string = ''): string {
   return scssAst.selectorName + name.replace('&', '')
 }
 
-const a: ScssAst = {
-  children: [], rnInfo: {}, rule: '', selectorName: ''
+export function generateScss(scssAst: ScssAst, n = 0): string {
+  if(!scssAst) return ''
+  const { comment, isNew, rnInfo, selectorName, rule, children } = scssAst
+  const { start, startAfter, end } = rnInfo
+  let scssStr = ''
+  scssStr += getDefault(comment) // 注释
+  scssStr += isNew ? rnIndent(n) : getDefault(start) // 选择器之前的缩进
+  scssStr += selectorName // 选择器
+  scssStr += isNew ? ' ' : getDefault(startAfter) // 选择器之后空格之前的样式
+  scssStr += '{'
+  if(rule) {
+    scssStr += rule
+  }
+  if(children.length) {
+    const children = distinctChildren(scssAst.children)
+    children.forEach(child => {
+      scssStr += generateScss(child, n + 1)
+    })
+  }
+  scssStr += isNew ? rnIndent(n) : getDefault(end)
+  scssStr += '}'
+  return scssStr
+}
+// 缩进
+function rnIndent (n: number) {
+  return n <= 0 ? '\n' : ('\n' + (' '.repeat(2)).repeat(n))
+}
+
+function getDefault(str: string | undefined): string {
+  return str || ''
+}
+
+function distinctChildren (scssAstList: ScssAst[]): ScssAst[] {
+  const tempObj: any = {}
+  const distinctArr: ScssAst[]  = []
+  for(let i = 0; i < scssAstList.length; i++) {
+    const scssAst = scssAstList[i]
+    if(!tempObj[scssAst.selectorName]) {
+      if(scssAst.children.length === 0) {
+        tempObj[scssAst.selectorName] = true
+      }
+      distinctArr.push(scssAst)
+    } else {
+      if(scssAst.children.length !== 0) {
+        distinctArr.push(scssAst)
+      }
+    }
+  }
+  return distinctArr
 }
