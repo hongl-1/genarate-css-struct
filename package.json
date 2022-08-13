@@ -1,6 +1,6 @@
 {
   "name": "css-structure",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "a tool for generate CSS precompiler structure",
   "main": "lib/bundel.cjs.js",
   "module": "lib/bundel.esm.js",
