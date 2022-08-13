@@ -37,30 +37,37 @@ export default {
 </script>
 
 
-<style>
-.header {
-  .left {
-    .title {
+<style lang="scss" scoped>
+.wrap {
+  width: 100px;
+  .header {
+    .left {
+      .title {
+      }
+      .sub-title1123 {
+      }
+      .sub-title1 {
+      }
+      .sub-title2 {
+      }
+      .sub-title3 {
+      }
+      .sub-title4 {
+      }
+      .sub-titleqq {
+      }
+      .sub-titleccc {
+      }
+      .sub-title123 {
+      }
     }
-    .sub-title1123 {
-    }
-    .sub-title1 {
-    }
-    .sub-title2 {
-    }
-    .sub-title3 {
-    }
-    .sub-title4 {
-    }
-    .sub-titleqq {
-    }
-    .sub-titleccc {
-    }
-    .sub-title123 {
+    .right {
+      .time {
+      }
     }
   }
-  .right {
-    .time {
+  .footer {
+    .copyright {
     }
   }
 }

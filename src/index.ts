@@ -5,6 +5,7 @@ export { parse } from './parse'
 import { Command } from 'commander'
 import path from 'path'
 import * as fs from 'fs'
+import pkg from '../package.json'
 
 /**
  * 1. 通过读取.vue的文件中的template 生成ast树
@@ -74,7 +75,7 @@ program.command(`file`)
     const matchTemplate = matchTemplateArr ? matchTemplateArr[1] : ''
     const matchStyle = matchStyleArr ? matchStyleArr[2] : ''
 
-    const ast = parse(matchTemplate).children[0]
+    const ast = parse(matchTemplate)
     const selectorTree = transform(ast).children[0]
     const scssAst = scssStr2Ast(matchStyle)
     resetScss(selectorTree, scssAst)
@@ -95,6 +96,6 @@ program.command(`file`)
     fs.writeFileSync(filePath, content)
   })
 
-program.version('1.0.0')
+program.version(pkg.version)
 
 program.parse(process.argv)
