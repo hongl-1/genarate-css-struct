@@ -85,9 +85,6 @@ program.command(`file`)
 
     if(matchStyleArr) {
       const matchStyleStart = matchStyleArr ? matchStyleArr[1] : ''
-      console.log('====')
-      console.log(matchStyleStart)
-      console.log('====')
       const matchStyleEnd = matchStyleArr ? matchStyleArr[3] : ''
       content += matchStyleStart + scss + '\n' + matchStyleEnd
     } else {
