@@ -1,9 +1,5 @@
 import { Ast } from './types'
-
-// wrapper 是额外添加的用于辅助构建 scss AST 的标签
-const htmlBlockTagList = ['wrapper', 'a', 'abbr', 'acronym', 'address', 'applet', 'article', 'aside', 'audio', 'b', 'basefont', 'bdi', 'bdo', 'big', 'blockquote', 'button', 'canvas', 'caption', 'center', 'cite', 'code', 'colgroup', 'command', 'datalist', 'dd', 'del', 'details', 'dfn', 'dialog', 'dir', 'div', 'dl', 'dt', 'em', 'fieldset', 'figcaption', 'figure', 'font', 'footer', 'form', 'frame', 'frameset', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6','head', 'header', 'i', 'iframe', 'ins', 'kbd', 'label', 'legend', 'li', 'main', 'map', 'mark', 'menu', 'meter', 'nav', 'noframes', 'noscript', 'object', 'ol', 'optgroup', 'option', 'output', 'p', 'pre', 'progress', 'q', 'rp', 'rt', 'ruby', 's', 'samp', 'section', 'select', 'small', 'span', 'strike', 'strong', 'sub', 'summary', 'sup', 'table', 'tbody', 'td', 'textarea', 'tfoot', 'th', 'thead', 'time', 'title', 'tr', 'tt', 'u', 'ul', 'var', 'video']
-// HTML 自闭合标签
-const voidElementList = ['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'keygen', 'link', 'menuitem', 'meta', 'param', 'source', 'track', 'wbr']
+import { voidElementList } from './utils'
 
 export function parse(html: string): Ast {
   const root: Ast = {
@@ -25,6 +21,10 @@ export function parse(html: string): Ast {
   let currentNode: Ast
 
   html.replace(tagRE, (tag: string) => {
+    console.log(tag)
+    if(tag.startsWith('<!--')) {
+      return ''
+    }
     // 匹配class
     const isStartTag = tag.charAt(1) !== '/'
     // 层级
@@ -46,6 +46,7 @@ export function parse(html: string): Ast {
     }
     return ''
   })
+  console.log(JSON.stringify(root))
   return root
 }
 
@@ -53,14 +54,14 @@ function parseTag(tag: string) {
   const node: Ast = {
     type: 'tag',
     isVoidElement: false,
-    tag: 'div',
+    tag: '',
     class: '',
     bindClass: '',
     id: '',
     bindId: '',
     children: []
   }
-  const tagNameMatch = /<([a-zA-Z]+)/.exec(tag)
+  const tagNameMatch = /<([a-zA-Z-]+)/.exec(tag)
   node.tag = (tagNameMatch as any)[1]
   node.isVoidElement = voidElementList.includes(node.tag)
 

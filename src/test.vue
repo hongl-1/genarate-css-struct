@@ -3,71 +3,38 @@
     <div class="header">
       <div class="left">
         <div class="title">标题</div>
-        <div class="sub-title1123">副标题</div>
-        <div class="sub-title1">副标题</div>
-        <div class="sub-title2">副标题</div>
-        <div class="sub-title3">副标题</div>
-        <div class="sub-title4">副标题</div>
-        <div class="sub-titleqq">副标题</div>
-        <div class="sub-titleccc">副标题</div>
-        <div class="sub-title123">副标题</div>
+        <div class="title2">副标题</div>
+        <div class="test1">
+          <div class="test1-1">
+            <div class="test1-1-1"></div>
+            <div></div>
+          </div>
+          <div class="test1-2">
+            <div class="test1-2-1"></div>
+          </div>
+        </div>
       </div>
-      <div class="right">
-        <template>
-          sdf
-        </template>
-        <div class="time">时间</div>
-      </div>
-    </div>
-    <div class="footer">
-      <div class="copyright">这是版权信息1</div>
-      <div class="copyright">这是版权信息2</div>
     </div>
   </div>
 </template>
-
-
-<script>
-export default {
-  data() {
-    return {
-    }
-  }
-}
-</script>
-
-
 <style lang="scss" scoped>
-.wrap {
-  width: 100px;
-  .header {
-    .left {
-      .title {
+.header {
+  .left {
+    .title {
+      .test1-1 {
+        .test1-1-1 {
+        }
+        div {
+        }
+        .test1-2-1 {
+        }
       }
-      .sub-title1123 {
-      }
-      .sub-title1 {
-      }
-      .sub-title2 {
-      }
-      .sub-title3 {
-      }
-      .sub-title4 {
-      }
-      .sub-titleqq {
-      }
-      .sub-titleccc {
-      }
-      .sub-title123 {
+      .test1-2 {
       }
     }
-    .right {
-      .time {
-      }
+    .title2 {
     }
-  }
-  .footer {
-    .copyright {
+    .test1 {
     }
   }
 }

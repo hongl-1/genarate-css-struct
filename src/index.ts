@@ -59,6 +59,28 @@ const template = `
 // console.log(scss)
 // const v= scss
 
+const styleEndTagLength = 8
+
+function getScssPosition(content: string, match: RegExpMatchArray) {
+  const startIndex = content.indexOf(match[1])
+  const endIndex = content.indexOf(match[3])
+  // </style> 的长度
+  return {
+    startIndex,
+    endIndex: endIndex + styleEndTagLength
+  }
+}
+
+// 截取scss
+function interceptScss(content:string, startIndex: number, endIndex: number) {
+  return content.slice(startIndex, endIndex)
+}
+
+// 拼接scss
+function spliceScss4Content(content:string, startIndex: number, endIndex: number, scssContent: string) {
+  return content.slice(0, startIndex) + scssContent + content.slice(endIndex)
+}
+
 const program = new Command()
 program.command(`file`)
   .description('初始化获取一个文件')
@@ -80,13 +102,13 @@ program.command(`file`)
     const scssAst = scssStr2Ast(matchStyle)
     resetScss(selectorTree, scssAst)
     const scss = generateScss(scssAst.children[0])
-    content = content.replace(styleRe, '')
-    console.log(content)
 
     if(matchStyleArr) {
+      const { startIndex, endIndex } = getScssPosition(content, matchStyleArr)
       const matchStyleStart = matchStyleArr ? matchStyleArr[1] : ''
       const matchStyleEnd = matchStyleArr ? matchStyleArr[3] : ''
-      content += matchStyleStart + scss + '\n' + matchStyleEnd
+      const scssContent = matchStyleStart + scss + '\n' + matchStyleEnd
+      content = spliceScss4Content(content, startIndex, endIndex, scssContent)
     } else {
       content += '<style lang=\"scss\" scoped>' + scss + '\n' + '</style>'
     }
